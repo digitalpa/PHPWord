@@ -352,11 +352,11 @@ class TemplateProcessor
     {
         $pattern = '|\$\{([^\}]+)\}|U';
         preg_match_all($pattern, $documentPartXML, $matches);
-//        foreach ($matches[0] as $value) {
-//            $valueCleaned = preg_replace('/<[^>]+>/', '', $value);
-//            $valueCleaned = preg_replace('/<\/[^>]+>/', '', $valueCleaned);
-//            $documentPartXML = str_replace($value, $valueCleaned, $documentPartXML);
-//        }
+        foreach ($matches[0] as $value) {
+            $valueCleaned = preg_replace('/<[^>]+>/', '', $value);
+            $valueCleaned = preg_replace('/<\/[^>]+>/', '', $valueCleaned);
+            $documentPartXML = str_replace($value, $valueCleaned, $documentPartXML);
+        }
 
         if (substr($search, 0, 2) !== '${' && substr($search, -1) !== '}') {
             $search = '${' . $search . '}';
@@ -486,7 +486,8 @@ class TemplateProcessor
         $node = $startNode; $startNode = null;
         while (is_null($startNode))
         {
-            $node = $node->xpath('..')[0];
+            $node_list = $node->xpath('..');
+            $node = $node_list[0];
         
             if ($node->getName() == 'p')
             {
@@ -498,7 +499,8 @@ class TemplateProcessor
         $node = $endNode; $endNode = null;
         while (is_null($endNode))
         {
-            $node = $node->xpath('..')[0];
+            $node_list = $node->xpath('..');
+            $node = $node_list[0];
         
             if ($node->getName() == 'p')
             {
@@ -553,7 +555,6 @@ class TemplateProcessor
             $this->temporaryDocumentMainPart,
             $matches
         );
-        
         return $matches;
     }
 }
